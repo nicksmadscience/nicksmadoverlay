@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>FMC Social Location</title>
+		<script type="text/javascript" src="http://nickpiegari.com/titlemakerstatic/js/wrapInSpans.js"></script>
+		<script type="text/javascript">
+
+var config = {
+	"fields":
+	{
+		"smallLocationText":
+		{
+			"displayname": "Top line",
+			"inputtype": "text",
+			"handler": "smallUpdater",
+			"default": "The Beehive",
+			"commonID": "text1",
+		},
+		"bigLocationText":
+		{
+			"displayname": "Bottom line",
+			"inputtype": "text",
+			"handler": "bigUpdater",
+			"default": "Wellington, N.Z.",
+			"commonID": "text2",
+		},
+	},
+	"thumbnailFrame": 60,
+	"animationLength": 320,
+}
+
+var editorMode = false;
+
+
+
+// Called when the editor or renderer needs an element to be updated.
+// Specified in the config array under "handler" for each field.
+function smallUpdater(_text)
+{
+	document.getElementById("smallLocation-text").innerHTML = _text;
+}
+
+
+function bigUpdater(_text)
+{
+	document.getElementById("bigLocation-text").innerHTML = _text;
+}
+
+
+
+
+// This function is called when the template is loaded from the editor.
+// Use it to pause animations or otherwise make it easier to edit.
+function switchToEditorMode()
+{
+	editorMode = true;
+	var animatedElements = document.getElementsByClassName("animatedElement");
+	for(var i = 0; i < animatedElements.length; i++)
+	{
+		animatedElements[i].style.animationPlayState = "running";
+	}
+
+	document.body.style.backgroundColor = "gray";
+	
+	var videoTarget = document.getElementById("bgvideo");
+	var videoMP4Source = videoTarget.getAttribute("data-futuremp4src");
+	var source = document.createElement('source');
+    source.setAttribute('src', videoMP4Source);
+    source.setAttribute('type', "video/mp4");
+    videoTarget.appendChild(source);
+}
+
+
+// Called by the editor, currently when the editor starts.
+// TODO: I should probably add a preview button that calls this instead
+// so that users can edit the title while it's still and then make it move
+function playAnimation()
+{
+
+}
+
+// some templates don't like being played by the editor, so here's a function for when it definitely needs to happen
+function forcePlayAnimation()
+{
+	var animatedElements = document.getElementsByClassName("animatedElement");
+	for(var i = 0; i < animatedElements.length; i++)
+	{
+		animatedElements[i].style.animationPlayState = "running";
+	}
+}
+
+// CEF renderer doesn't require a separate alpha pass because
+// we can access the alpha channel directly, mothafuckaz
+function actualAlpha()
+{
+	console.log("actual alpha");
+	document.body.style.background = "none transparent;";
+
+}
+
+
+// Called when the renderer needs to render a frame.
+function goToFrame(_frame)
+{
+	console.log("frame: " + _frame.toString());
+
+	var seekPoint = _frame / 24;
+
+	// freerun = false;
+	// clock = (_frame / 24) * 1000;
+
+	var animatedElements = document.getElementsByClassName("animatedElement");
+	for(var i = 0; i < animatedElements.length; i++)
+	{
+		animatedElements[i].style.animationPlayState = "paused";
+		var animationdelay = animatedElements[i].dataset["animationdelay"];
+
+		var fr = seekPoint - animationdelay;
+		fr = fr > 0 ? fr : 0;
+		animatedElements[i].style.animationDelay = "-" + fr.toString() + "s";
+		console.log(animatedElements[i].id.toString() + ": -" + fr.toString() + "s");
+	}
+
+	console.log("# " + _frame.toString());
+	return "OK"
+}
+
+
+
+var frame = 0;
+
+
+// Called when the renderer is rendering the alpha pass.
+// Only called once, and only after the fill pass is done,
+// so it doesn't need to be reversible.
+function switchToAlphaChannel()
+{
+	document.body.style.backgroundColor = "black";
+
+	var alphas = document.querySelectorAll("[data-postalphaclass]");
+	for (var i = 0; i < alphas.length; i++)
+	{
+		alphas[i].classList.add(alphas[i].getAttribute("data-postalphaclass"));
+		console.log(alphas[i].classList);
+	}
+}
+
+
+// Keep things consistent by changing the text to the configured default from the beginning.
+window.onload = function()
+{
+	smallUpdater(config["fields"]["smallLocationText"]["default"]);
+	bigUpdater(config["fields"]["bigLocationText"]["default"]);
+};
+
+		</script>
+		<style type="text/css">
+
+@font-face
+{
+    font-family: "Myriad Pro Bold Condensed";
+    src: url("/titlemakerstatic/fonts/MyriadPro-BoldCond.otf") format("opentype");
+}
+
+@font-face
+{
+    font-family: "Myriad Pro Condensed";
+    src: url("/titlemakerstatic/fonts/MyriadPro-Cond.otf") format("opentype");
+}
+
+@font-face
+{
+    font-family: 'Myriad Pro Semibold';
+ 	src: url("/titlemakerstatic/fonts/MyriadPro-Semibold.otf") format("opentype");
+}
+
+@font-face
+{
+    font-family: 'Myriad Pro Bold';
+ 	src: url("/titlemakerstatic/fonts/MyriadPro-Bold.otf") format("opentype");
+}
+
+@font-face
+{
+    font-family: 'Myriad Pro';
+ 	src: url("/titlemakerstatic/fonts/MyriadPro-Regular.otf") format("opentype");
+}
+
+body
+{
+	font-family: 'Myriad Pro';
+	width: 1920px;
+	height: 1080px;
+	/*border: 1px solid white;*/
+	/*perspective: 1600px;*/
+	/*background-color: black;*/
+	/*background-color: gray;*/
+	color: white;
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+.smallLocation
+{
+	position: relative;
+	font-size: 90px;
+	text-transform: uppercase;
+	background: radial-gradient(circle at 2.01% 30.95%, #cb356b, transparent 100%),radial-gradient(circle at 97.99% 85.05%, #bd3f32, transparent 100%),radial-gradient(circle at 50% 50%, #800, #800 100%);
+	/*background: linear-gradient(25deg, rgba(174, 0, 0, 0.9) 0%, rgba(198, 0, 98, 0.9) 100%);*/
+	font-family: 'Myriad Pro Condensed';
+	padding: 20px;
+	clip-path: inset(0px 700px 0px 0px);
+	
+	animation-name: smallLocationReveal;
+	animation-duration: 7s;
+	animation-iteration-count: infinite;
+	animation-fill-mode: forwards;
+	animation-play-state: paused;
+}
+
+.smallLocation-text
+{
+	margin-bottom: -20px;
+	text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+@keyframes smallLocationReveal
+{
+	0%
+	{
+		clip-path: inset(0px 100% 0px 0px);
+	}
+	7%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+	14%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+	90%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+	96%
+	{
+		clip-path: inset(0px 100% 0px 0px);
+	}
+	100%
+	{
+		clip-path: inset(0px 100% 0px 0px);
+	}
+}
+
+.redthing
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: red;
+	z-index: 50;
+
+	clip-path: inset(0px 0px 0px 0px);
+	animation-duration: 7s;
+	animation-iteration-count: infinite;
+	animation-fill-mode: forwards;
+	animation-play-state: paused;
+}
+
+.smallLocation-redthing
+{
+	animation-name: smallLocationRedThingReveal;
+}
+
+@keyframes smallLocationRedThingReveal
+{
+	0%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+	2.85%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+	8.5%
+	{
+		clip-path: inset(0px 0px 0px 100%);
+	}
+	14.28%
+	{
+		clip-path: inset(0px 0px 0px 100%);
+	}
+	85%
+	{
+		clip-path: inset(0px 0px 0px 100%);
+	}
+	90%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+	100%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+}
+
+.bigLocation
+{
+	font-size: 57px;
+	text-transform: uppercase;
+	background: linear-gradient(25deg, rgba(43, 43, 43, 0.9) 0%, rgba(50, 50, 60, 0.9) 100%);
+	font-family: 'Myriad Pro Semibold';
+	padding: 10px 20px;
+	
+	animation-name: bigLocationReveal;
+	animation-duration: 7s;
+	animation-iteration-count: infinite;
+	animation-fill-mode: forwards;
+	animation-play-state: paused;
+}
+
+@keyframes bigLocationReveal
+{
+	0%
+	{
+		clip-path: inset(0px 100% 0px 0px);
+	}
+	4.28%
+	{
+		clip-path: inset(0px 100% 0px 0px);
+	}
+	11.42%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+	14.28%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+	95%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+	100%
+	{
+		clip-path: inset(0px 100% 0px 0px);
+	}
+}
+
+.bigLocation-text
+{
+	margin-bottom: -15px;
+	text-shadow: 1.5px 1.5px 0 rgba(0, 0, 0, 0.3);
+}
+
+.bigLocation-redthing
+{
+	clip-path: inset(0px 0px 0px 100%);
+	
+	animation-name: bigLocationRedThingReveal;
+}
+
+@keyframes bigLocationRedThingReveal
+{
+	0%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+	7.14%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+	14.28%
+	{
+		clip-path: inset(0px 0px 0px 100%);
+	}
+	90%
+	{
+		clip-path: inset(0px 0px 0px 100%);
+	}
+	95%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+	100%
+	{
+		clip-path: inset(0px 0px 0px 0px);
+	}
+}
+
+.autowidth
+{
+	position: absolute;
+	bottom: 300px;
+	left: 100px;
+	display: inline-block;
+	filter: drop-shadow(3px 5px 20px rgba(0, 0, 0, 0.5));
+}
+
+.alpha
+{
+	color: white;
+	background: none;
+	background-color: white;
+	filter: drop-shadow(3px 5px 20px rgba(255, 255, 255, 0.5));
+}
+
+.smallLocation-text.alpha
+{
+	text-shadow: 3px 3px 0 rgba(255, 255, 255, 0.3);
+}
+
+.bigLocation-text.alpha
+{
+	text-shadow: 1.5px 1.5px 0 rgba(255, 255, 255, 0.3);
+}
+
+
+
+		</style>
+	</head>
+	<body>
+			<!-- <div style="position: absolute; top: 0px; left: 0px;"><button onclick="frame -= 10; goToFrame(frame);">&lt;&lt;</button><button onclick="frame -= 1; goToFrame(frame);">&lt;</button><button onclick="goToFrame(0); frame = 0">0</button><button onclick="frame += 1; goToFrame(frame);">&gt;</button><button onclick="frame += 10; goToFrame(frame);">&gt;&gt;</button><button onclick="switchToAlphaChannel()">alpha</button></div> -->
+        <video id="bgvideo" style="z-index: -100000; position: absolute; top: 0; left: 0" data-futuremp4src="http://nickpiegari.com/titlemakerstatic/video/disclosures-background.mp4" autoplay playsinline muted loop>
+        </video>
+		<div class="autowidth animatedElement" data-animationDelay="0" style="animation-delay: 0s">
+			<div class="smallLocation animatedElement" style="animation-delay: 0s" data-animationDelay="0" data-postalphaclass="alpha">
+				<div class="smallLocation-text" id="smallLocation-text" data-postalphaclass="alpha"></div>
+				<div class="redthing animatedElement smallLocation-redthing" style="animation-delay: 0s" data-animationDelay="0" data-postalphaclass="alpha"></div>
+			</div>
+			<div class="bigLocation animatedElement" style="animation-delay: 0s" data-animationDelay="0" data-postalphaclass="alpha">
+				<div class="bigLocation-text" id="bigLocation-text" data-postalphaclass="alpha"></div>
+				<div class="redthing animatedElement bigLocation-redthing" style="animation-delay: 0s" data-animationDelay="0" data-postalphaclass="alpha"></div>
+			</div>
+		</div>
+	</body>
+</html> 

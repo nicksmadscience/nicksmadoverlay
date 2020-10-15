@@ -1,0 +1,100 @@
+<html>
+	<head>
+		<title>Titlemaker sample player</title>
+		<style type="text/css">
+
+body
+{
+	background-color: none transparent;
+	width: 1920px;
+	height: 1080px;
+	margin: 0;
+	padding: 0;
+}
+
+		</style>
+		<script type="text/javascript">
+
+
+
+function newWebsocket()
+{
+    console.log("new websocket");
+    s = new WebSocket("ws://10.0.0.220:6789/ws");
+
+    s.onopen = function(e)
+    {
+        // var status = document.getElementById("status")
+        // if (status.classList.contains("status-notconnected"))
+        //     status.classList.replace("status-notconnected", "status-connected")
+        // status.innerHTML = "Connected";
+        console.log("opened");
+        // document.getElementById("websocketstatus").classList.remove("notconnected");
+    }
+    
+    s.onclose = function(e)
+    {
+        // var status = document.getElementById("status")
+        // if (status.classList.contains("status-connected"))
+        //     status.classList.replace("status-connected", "status-notconnected")
+        // status.innerHTML = "Not Connected";
+        console.log("closed");
+        // document.getElementById("websocketstatus").classList.add("notconnected");
+
+        setTimeout(function() { newWebsocket(); }, 3000);
+    }
+    
+    s.onmessage = function(e)
+    {
+        console.log(e.data);
+        var websocketMessage_array = JSON.parse(e.data);
+
+        var messageType = websocketMessage_array["messagetype"];
+
+
+	    if (messageType == "titleplay")
+	    {
+	    	var titleholder = document.getElementById("titleholder");
+	    	
+	    	titleholder.url = websocketMessage_array["url"];
+
+    		// update all the fields
+    		var fields = JSON.parse(websocketMessage_array["message"]);
+    		console.log(fields);
+    		console.log(fields.length);
+
+			for (var key in fields)
+			{
+			    if (fields.hasOwnProperty(key))
+			    {
+			        console.log(key + " -> " + fields[key]);
+			        titleholder.contentWindow.eval(key + "('" + fields[key] + "')");
+			    }
+			}
+
+			// for (var j = 0; j < fields.length; j++)
+			// {
+			// 	console.log(j);
+			// 	var toEval = fields[j]["fieldname"] + "('" + fields[j]["value"] + "')";
+			// 	console.log(toEval);
+			// 	nextiframe.contentWindow.eval(toEval);
+			// }
+
+			titleholder.contentWindow.playAnimation();
+	    }
+    }
+}
+
+
+
+window.onload = function()
+{
+    // newWebsocket();
+}
+
+		</script>
+	</head>
+	<body>
+		<iframe id="titleholder" width="1920px" height="1080px"></iframe>
+	</body>
+</html>

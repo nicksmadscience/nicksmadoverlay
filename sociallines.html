@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>social title</title>
+	</head>
+	<link href="https://fonts.googleapis.com/css?family=Muli:300,400" rel="stylesheet"> 
+	<svg id="mask" width="0" height="0">
+	  	<defs>
+	    	<clipPath id="topboxoneclippath" clipPathUnits="objectBoundingBox">
+	      		<polygon points="0 0, 0 0, 0 1, 0 1">
+	      			<animate begin="0.5s" attributeName="points" dur="300ms" to="0 0, 1 0, 1 1, 0 1" fill="freeze" />
+	    		</polygon>
+	    	</clipPath>
+	    	<clipPath id="bottomboxoneclippath" clipPathUnits="objectBoundingBox">
+	      		<polygon points="0 0, 1 0, 1 1, 0 1">
+	      			<animate begin="0.6s" attributeName="points" dur="300ms" to="1 0, 1 0, 1 1, 1 1" fill="freeze" />
+	    		</polygon>
+	    	</clipPath>
+
+	    	<clipPath id="topboxtwoclippath" clipPathUnits="objectBoundingBox">
+	      		<polygon points="0 0, 0 0, 0 1, 0 1">
+	      			<animate begin="0.9s" attributeName="points" dur="300ms" to="0 0, 1 0, 1 1, 0 1" fill="freeze" />
+	    		</polygon>
+	    	</clipPath>
+	    	<clipPath id="bottomboxtwoclippath" clipPathUnits="objectBoundingBox">
+	      		<polygon points="0 0, 1 0, 1 1, 0 1">
+	      			<animate begin="1.0s" attributeName="points" dur="300ms" to="1 0, 1 0, 1 1, 1 1" fill="freeze" />
+	    		</polygon>
+	    	</clipPath>
+
+	    	<clipPath id="topboxthreeclippath" clipPathUnits="objectBoundingBox">
+	      		<polygon points="0 0, 0 0, 0 1, 0 1">
+	      			<animate begin="1.3s" attributeName="points" dur="300ms" to="0 0, 1 0, 1 1, 0 1" fill="freeze" />
+	    		</polygon>
+	    	</clipPath>
+	    	<clipPath id="bottomboxthreeclippath" clipPathUnits="objectBoundingBox">
+	      		<polygon points="0 0, 1 0, 1 1, 0 1">
+	      			<animate begin="1.4s" attributeName="points" dur="300ms" to="1 0, 1 0, 1 1, 1 1" fill="freeze" />
+	    		</polygon>
+	    	</clipPath>
+	  	</defs>
+	</svg>
+	<style type="text/css">
+
+/* I really need to save this:  https://codepen.io/giana/pen/yYBpVY */
+
+/* I very much like the look of some of these:  https://www.codeschool.com/blog/2014/11/04/inline-svg-animations/ */
+
+/* "nth-child" can be used for letter animations! */
+
+/* possibly useful:  http://codepen.io/chriscoyier/pen/DpFfE */
+
+body
+{
+	background: none transparent;
+	position: absolute;
+	width: 1920px;
+	height: 1080px;
+	margin: 0px;
+}
+
+@keyframes boxAppear
+{
+	0%
+	{
+		left: -10%;
+		top: 50%;
+	}
+	30%
+	{
+		left: 5%;
+		top: 50%;
+	}
+	50%
+	{
+		left: 5%;
+		top: 61%;
+	}
+	70%
+	{
+		left: 5%;
+		top: 72%;
+	}
+	100%
+	{
+		left: -10%;
+		top: 72%;
+	}
+}
+
+
+.box
+{
+	display: inline-block;
+	overflow: hidden;
+	position: relative;
+	left: 1vw;
+	background-color: rgba(40, 40, 40, 0.9);
+	margin: 0px;
+	border-left: 10px solid yellow;
+	border-right: 10px solid yellow;
+	height: 9.3%;
+	z-index: 0;
+}
+
+.boxText
+{
+	font-family: 'Muli', sans-serif;
+	font-face: 'Muli', sans-serif;
+	src: url('https://fonts.googleapis.com/css?family=Muli:300,400');
+	font-weight: 300;
+	color: white;
+	font-size: 60pt;
+	text-align: center;
+	position: relative;
+	margin-left: 100px;
+	margin-right: 100px;
+}
+
+.boxYellowBackground
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	background-color: yellow;
+	z-index: 50;
+}
+
+.boxone
+{
+	position: absolute;
+	top: 50%;
+	left: 5%;
+}
+
+#boxoneBackground
+{
+	clip-path: url("#bottomboxoneclippath");
+}
+
+#boxone
+{
+	clip-path: url("#topboxoneclippath");
+}
+
+.boxtwo
+{
+	position: absolute;
+	top: 61%;
+	left: 5%;
+}
+
+#boxtwoBackground
+{
+	clip-path: url("#bottomboxtwoclippath");
+}
+
+#boxtwo
+{
+	clip-path: url("#topboxtwoclippath");
+}
+
+.boxthree
+{
+	position: absolute;
+	top: 72%;
+	left: 5%;
+}
+
+#boxthreeBackground
+{
+	clip-path: url("#bottomboxthreeclippath");
+}
+
+#boxthree
+{
+	clip-path: url("#topboxthreeclippath");
+}
+
+#boxAppear
+{
+	position: absolute;
+	top: 50%;
+	left: 5%;
+	height: 9.3%;
+	width: 7%;
+	background-color: yellow;
+	z-index: 100;
+	animation-name: boxAppear;
+	animation-duration: 2s;
+	animation-play-state: paused;
+	animation-fill-mode: forwards;
+}
+
+em
+{
+	font-weight: bold;
+	color: yellow;
+	font-style: normal;
+}
+
+
+
+
+	</style>
+	<script type="text/javascript">
+
+var config = {
+	"fields":
+	{
+		"box1Text":
+		{
+			"displayname": "Box one",
+			"inputtype": "text",
+			"handler": "boxoneUpdater",
+			"default": "This bar in London",
+			"commonID": "text1",
+		},
+		"box2Text":
+		{
+			"displayname": "Box two",
+			"inputtype": "text",
+			"handler": "boxtwoUpdater",
+			"default": "creates bodacious cocktails",
+			"commonID": "text2",
+		},
+		"box3Text":
+		{
+			"displayname": "Box three",
+			"inputtype": "text",
+			"handler": "boxthreeUpdater",
+			"default": "using **nuclear fusion.**",
+			"commonID": "text3",
+		},
+		"highlightColor":
+		{
+			"displayname": "Highlight color",
+			"inputtype": "text",
+			"handler": "highlightColorUpdater",
+			"default": "#ffff00",
+			"commonID": "highlightColor",
+		}
+	},
+	"thumbnailFrame": 60,
+	"animationLength": 240,
+}
+
+function emIfy(_string)
+{
+	var splitString = _string.split("**");
+	var response = "";
+	var emActive = false;
+	for (i = 0; i < splitString.length; i++)
+	{
+		response += splitString[i];
+
+		switch (emActive)
+		{
+			case false: response += "<em>";  break;
+			case true:  response += "</em>"; break;
+		}
+		emActive = !emActive;
+	}
+
+	if (emActive)
+		response += "</em>";
+
+	return response;
+}
+
+var highlightColor = "yellow";
+
+function boxoneUpdater(_text)
+{
+	document.getElementById("boxoneText").innerHTML = emIfy(_text.replace(new RegExp("<", 'g'), "&lt;").replace(new RegExp(">", 'g'), "&gt;"));
+	emColorUpdater(highlightColor);  // gotta do this because all the em's get redone when new text is added
+}
+
+function boxtwoUpdater(_text)
+{
+	document.getElementById("boxtwoText").innerHTML = emIfy(_text.replace(new RegExp("<", 'g'), "&lt;").replace(new RegExp(">", 'g'), "&gt;"));
+	emColorUpdater(highlightColor);
+}
+
+function boxthreeUpdater(_text)
+{
+	document.getElementById("boxthreeText").innerHTML = emIfy(_text.replace(new RegExp("<", 'g'), "&lt;").replace(new RegExp(">", 'g'), "&gt;"));
+	emColorUpdater(highlightColor);
+}
+
+function emColorUpdater(_color)
+{
+	var ems = document.getElementsByTagName("em");
+	for(var i = 0; i < ems.length; i++)
+	{
+		ems.item(i).style.color = _color;
+	}
+}
+
+editorMode = false
+function highlightColorUpdater(_text)
+{
+	highlightColor = _text;
+
+	omfgcolor = _text;
+	document.getElementById("boxAppear").style.backgroundColor = _text;
+
+	if (editorMode == false)
+	{
+		document.getElementById("boxoneBackground").style.backgroundColor = _text;
+		document.getElementById("boxtwoBackground").style.backgroundColor = _text;
+		document.getElementById("boxthreeBackground").style.backgroundColor = _text;
+	}
+	
+	emColorUpdater(_text);
+
+	var boxes = document.getElementsByClassName("box");
+	for(var i = 0; i < boxes.length; i++)
+	{
+		boxes.item(i).style.borderLeftColor = _text;
+		boxes.item(i).style.borderRightColor = _text;
+	}
+
+	// setInterval(omfg, 100);
+}
+
+function omfg()
+{
+	var ems = document.getElementsByTagName("em");
+	for(var i = 0; i < ems.length; i++)
+	{
+		ems.item(i).style.color = highlightColor;
+	}
+}
+
+function goToFrame(_frame)
+{
+	seekPoint = "-" + (_frame / 24).toString() + "s";
+
+	document.getElementById("mask").setCurrentTime(_frame / 24);
+	document.getElementById("mask").pauseAnimations();
+
+	document.getElementById("boxAppear").style.animationDelay = seekPoint;
+	document.getElementById("boxAppear").style.animationPlayState = "paused";
+
+	console.log("# " + _frame.toString());
+	return "OK"
+}
+
+var frame = 0;
+function nextFrame()
+{
+	frame += 1;
+	goToFrame(frame);
+	console.log(frame);
+}
+
+function prevFrame()
+{
+	frame -= 1;
+	goToFrame(frame);
+	console.log(frame);
+}
+
+function playAnimation()
+{
+	document.getElementById("boxAppear").style.animationPlayState = "running";
+	document.getElementById('mask').unpauseAnimations();
+}
+
+
+function switchToEditorMode()
+{
+	editorMode = true;
+	// make animations loop forever
+	document.getElementById("boxAppear").style.animationIterationCount = "infinite";
+	// document.getElementById('mask').setAttribute("repeatCount", "indefinite");
+
+	//SMIL_SUPPORT = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion').toString().indexOf('SVG') >-1;
+	//console.log("smil support: " + SMIL_SUPPORT.toString());
+
+	//if (!SMIL_SUPPORT)
+
+	//var isChrome = !!window.chrome && !!window.chrome.webstore;
+	if (navigator.userAgent.search("Firefox") == -1) // TODO: Chrome apparently *does* support SMIL (for now); figure out what I'm doing wrong
+	{
+		var backgrounds = document.getElementsByClassName("boxYellowBackground");
+		for(var i = 0; i < backgrounds.length; i++)
+		{
+			backgrounds.item(i).style.backgroundColor = "rgba(0, 0, 0, 0)";
+			backgrounds.item(i).style.color = "rgba(0, 0, 0, 0)";
+		}
+	}
+}
+
+function resize(_width)
+{
+	document.body.style.width = _width.toString() + "px";
+	document.body.style.height = (_width * .5625).toString() + "px";
+	/* document.body.style.border = "1px solid white" */
+
+	var boxoneText = document.getElementById("boxoneText");
+	boxoneText.style.fontSize = (_width * .03125).toString() + "px";
+	boxoneText.style.top = ((1920 - _width) * 0.003).toString() + "px";
+	boxoneText.style.marginLeft = (_width / 19.2).toString() + "px";
+	boxoneText.style.marginRight = (_width / 19.2).toString() + "px";
+
+	var boxtwoText = document.getElementById("boxtwoText");
+	boxtwoText.style.fontSize = (_width * .03125).toString() + "px";
+	boxtwoText.style.top = ((1920 - _width) * 0.003).toString() + "px";
+	boxtwoText.style.marginLeft = (_width / 19.2).toString() + "px";
+	boxtwoText.style.marginRight = (_width / 19.2).toString() + "px";
+
+	var boxthreeText = document.getElementById("boxthreeText");
+	boxthreeText.style.fontSize = (_width * .03125).toString() + "px";
+	boxthreeText.style.top = ((1920 - _width) * 0.003).toString() + "px";
+	boxthreeText.style.marginLeft = (_width / 19.2).toString() + "px";
+	boxthreeText.style.marginRight = (_width / 19.2).toString() + "px";
+
+	document.getElementById("boxone").style.borderLeft = (_width * .005).toString() + "px solid " + highlightColor;
+	document.getElementById("boxone").style.borderRight = (_width * .005).toString() + "px solid " + highlightColor;
+
+	document.getElementById("boxtwo").style.borderLeft = (_width * .005).toString() + "px solid " + highlightColor;
+	document.getElementById("boxtwo").style.borderRight = (_width * .005).toString() + "px solid " + highlightColor;
+
+	document.getElementById("boxthree").style.borderLeft = (_width * .005).toString() + "px solid " + highlightColor;
+	document.getElementById("boxthree").style.borderRight = (_width * .005).toString() + "px solid " + highlightColor;
+}
+
+
+function switchToAlphaChannel()
+{
+	document.getElementById("boxAppear").style.backgroundColor = "white";
+
+	document.getElementById("boxone").style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+	document.getElementById("boxoneText").style.color =  "white";
+	document.getElementById("boxtwo").style.backgroundColor =  "rgba(255, 255, 255, 0.9)";
+	document.getElementById("boxtwoText").style.color =  "white";
+	document.getElementById("boxthree").style.backgroundColor =  "rgba(255, 255, 255, 0.9)";
+	document.getElementById("boxthreeText").style.color =  "white";
+
+	var ems = document.getElementsByTagName("em");
+	for(var i = 0; i < ems.length; i++)
+	{
+		ems.item(i).style.color = "white";
+	}
+
+	var boxes = document.getElementsByClassName("box");
+	for(var i = 0; i < boxes.length; i++)
+	{
+		boxes.item(i).style.borderLeftColor = "white";
+		boxes.item(i).style.borderRightColor = "white";
+	}
+
+	var backgrounds = document.getElementsByClassName("boxYellowBackground");
+	for(var i = 0; i < backgrounds.length; i++)
+	{
+		backgrounds.item(i).style.backgroundColor = "white";
+	}
+}
+
+// CEF renderer doesn't require a separate alpha pass because
+// we can access the alpha channel directly, mothafuckaz
+function actualAlpha()
+{
+	console.log("actual alpha");
+	document.body.style.background = "none transparent;";
+
+}
+
+function randomFields()
+{
+	switch (Math.floor(Math.random() * 4))
+	{
+		case 0: var place = "London"; break;
+		case 1: var place = "Herthfordship"; break;
+		case 2: var place = "Worcesterchester"; break;
+		default: var place = "San Brantonio"; break;
+	}
+
+	switch (Math.floor(Math.random() * 4))
+	{
+		case 0: var adjective = "bodacious"; break;
+		case 1: var adjective = "incredible"; break;
+		case 2: var adjective = "gnarly"; break;
+		default: var adjective = "ridiculous"; break;
+	}
+
+	switch (Math.floor(Math.random() * 5))
+	{
+		case 0: var implement = "liquid nitrogen"; break;
+		case 1: var implement = "horse feed"; break;
+		case 2: var implement = "the power of love"; break;
+		case 3: var implement = "nuclear fusion"; break;
+		default: var implement = "the power of the sun"; break;
+	}
+
+	document.getElementById("boxoneText").innerHTML = "This bar in " + place;
+	document.getElementById("boxtwoText").innerHTML = "makes " + adjective + " cocktails";
+	document.getElementById("boxthreeText").innerHTML = "using <em>" + implement + ".</em>";
+}
+
+
+	</script>
+	<body onload="document.getElementById('mask').pauseAnimations();" style="width: 1920px; height: 1080px; position: absolute">
+	<!-- <button onclick="switchToAlphaChannel()">alpha</button><button onclick="resize(540)">540</button><button onclick="playAnimation()">&#9654;</button><button onclick="prevFrame()">&lt;</button><button onclick="nextFrame()">&gt;</button> -->
+		<div id="boxAppear">&nbsp;</div>
+		<div id="boxone" class="boxone box">
+			<div class="customField boxText" id="boxoneText" data-name="Box One">This bar in London</div>
+			<div id="boxoneBackground" class="boxYellowBackground">&nbsp;</div>
+		</div>
+		<div id="boxtwo" class="boxtwo box">
+			<div class="customField boxText" id="boxtwoText" data-name="Box Two">makes bodacious cocktails</div>
+			<div id="boxtwoBackground" class="boxYellowBackground">&nbsp;</div>
+		</div>
+		<div id="boxthree" class="boxthree box">
+			<div class="customField boxText" id="boxthreeText" data-name="Box Three">using <em>nuclear fusion.</em></span></div>
+			<div id="boxthreeBackground" class="boxYellowBackground">&nbsp;</div>
+		</div>
+	</body>
+</html>

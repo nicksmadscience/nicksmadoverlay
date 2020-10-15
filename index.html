@@ -2,9 +2,14 @@
 
 <!-- TODO: synchronize with scene transitions in OBS -->
 
+<!-- get rid of streamelements completely -->
+
 <html>
 	<head>
 		<title>Nick's Mad Overlay</title>
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
 		<style type="text/css">
 
 body
@@ -24,27 +29,10 @@ body
 	left: 0;
 	width: 675px;
 	height: 1080px;
-
-	animation-name: sample-teal;
-	animation-duration: 1s;
-	animation-iteration-count: 1;
-	animation-fill-mode: forwards;
-
-	transform: translateX(-530px);
+	transition: all 0.3s;
 }
 
 
-@keyframes sample-teal
-{
-	0%
-	{
-		transform: translateX(-530px);
-	}
-	100%
-	{
-		transform: translateX(0px);
-	}
-}
 
 
 .bg-yellow
@@ -55,24 +43,11 @@ body
 	left: 675px;
 	right: 0;
 	height: 1080px;
-
-	animation-name: sample-yellow;
-	animation-duration: 1s;
-	animation-iteration-count: 1;
-	animation-fill-mode: forwards;
+	transition: all 0.3s;
 }
 
-@keyframes sample-yellow
-{
-	0%
-	{
-		transform: translateX(1245px);
-	}
-	100%
-	{
-		transform: translateX(0px);
-	}
-}
+
+
 
 .lowerthird-green
 {
@@ -82,30 +57,226 @@ body
 	height: 100px;
 	width: 1920px;
 	z-index: 100;
-
-	animation-name: sample-green;
-	animation-duration: 1s;
-	animation-iteration-count: 1;
-	animation-fill-mode: forwards;
+	transition: all 0.3s;
 }
 
-@keyframes sample-teal
+
+
+.nmslogo-div
+{
+	position: absolute;
+	bottom: 15px;
+	left: 15px;
+	z-index: 1000;
+}
+
+.nmslogo-img
+{
+	height: 180px;
+	filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.3));
+}
+
+
+
+.bubble
+{
+	position: absolute;
+	bottom: -64px;
+	z-index: 2000;
+
+	animation-name: bubble;
+	animation-iteration-count: infinite;
+}
+
+@keyframes bubble
 {
 	0%
 	{
-		transform: translateY(-100px);
+		opacity: 1.0;
+		transform: translateY(0);
 	}
+
+	60%
+	{
+		opacity: 0.0;
+		transform: translateY(-400px);
+	}
+
 	100%
 	{
-		transform: translateY(0px);
+		opacity: 0.0;
+		transform: translateY(-400px);
 	}
 }
 
+
+
+.box
+{
+	position: absolute;
+	background-color: black;
+	border: 3px solid #ff6;
+	box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+#box-facecam
+{
+	left: 24px;
+	top: 72px;
+	width: 616px;
+	height: 354px;
+}
+
+
+#box-actioncam
+{
+	left: 24px;
+	top: 462px;
+	width: 616px;
+	height: 354px;
+}
+
+
+#box-computer
+{
+	left: 706px;
+	top: 105px;
+	width: 1166px;
+	height: 656px;
+}
+
+b
+
+#fullscreenvideoplayer
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0;
+	padding: 0;
+	z-index: 500;
+	mix-blend-mode: overlay;
+	transition: all 0.5s;
+}
+
+
+
+
+
 		</style>
+		<script type="text/javascript">
+
+
+
+function playVideo(_videoPlayerElement, _videoPlayerSource, _looping, _url)
+{
+
+	_videoPlayerSource.src = _url;
+	_videoPlayerElement.load();
+
+	if (_looping == "looping")
+		fullscreenvideoplayer.loop = true;
+	else
+		fullscreenvideoplayer.loop = false;
+
+	_videoPlayerElement.currentTime = 0;
+	_videoPlayerElement.play();
+}
+
+
+
+function newWebsocket()
+{
+    console.log("new websocket");
+    s = new WebSocket("ws://10.0.0.220:6789/ws");
+
+    s.onopen = function(e)
+    {
+        console.log("opened");
+    }
+    
+    s.onclose = function(e)
+    {
+        console.log("closed");
+
+        setTimeout(function() { newWebsocket(); }, 3000);
+    }
+    
+    s.onmessage = function(e)
+    {
+        console.log(e.data);
+
+        var websocketMessage_array = JSON.parse(e.data);
+
+        var messageType = websocketMessage_array["messagetype"];
+
+
+	    if (messageType == "videoplay")
+	    {
+			// function playVideo(_videoPlayerElement, _videoPlayerSource, _looping, _url)
+
+			
+
+			if ((websocketMessage_array["instance"] == "overlay") || (websocketMessage_array["instance"] == "all"))
+			{
+				var fullscreenvideoplayer = document.getElementById("fullscreenvideoplayer");
+				fullscreenvideoplayer.style.opacity = "0.0";
+
+				setTimeout(function() {
+					playVideo(fullscreenvideoplayer,
+						  document.getElementById("fullscreenvideoplayer-source"),
+						  websocketMessage_array["looping"],
+						  websocketMessage_array["url"]);
+
+					
+
+				}, 500);
+
+				setTimeout(function() {
+					fullscreenvideoplayer.style.opacity = "1.0";
+				}, 750)
+				
+			}
+		}
+		else if (messageType == "background")
+		{
+			document.getElementById("bg-left").style.backgroundColor = "#" + websocketMessage_array["left"];
+			document.getElementById("bg-right").style.backgroundColor = "#" + websocketMessage_array["right"];
+			document.getElementById("bg-lower").style.backgroundColor = "#" + websocketMessage_array["lower"];
+			document.getElementById("fullscreenvideoplayer").style.filter = "blur(" + websocketMessage_array["blur"] + ")";
+			document.getElementById("fullscreenvideoplayer").style.mixBlendMode = websocketMessage_array["mixblendmode"];
+		}
+    }
+}
+
+
+
+window.onload = function()
+{
+    newWebsocket();
+}
+
+
+		</script>
 	</head>
 	<body>
-		<div class="bg-teal"></div>
-		<div class="bg-yellow"></div>
-		<div class="lowerthird-green"></div>
+		<div class="nmslogo-div">
+			<img class="nmslogo-img" src="nms-logo-green-550.gif">
+		</div>
+		<video id="fullscreenvideoplayer" width="1920" height="1080" autoplay>
+			<source id="fullscreenvideoplayer-source">
+		</video>
+		<div class="bg-teal" id="bg-left"></div>
+		<div class="bg-yellow" id="bg-right"></div>
+		<div class="lowerthird-green" id="bg-lower"></div>
+		<div class="box" id="box-facecam" style="visibility: none"><!-- #HACK -->
+		<div class="box" id="box-actioncam" style="visibility: none"><!-- #HACK -->
+		<div class="box" id="box-computer"  style="visibility: none"><!-- #HACK -->
+		<div class="bubble" style="left: 100px; animation-delay: 0.2s; animation-duration: 8s;"><img src="bubble.png"></div>
+		<div class="bubble" style="left: 300px; animation-delay: 1s; animation-duration: 7s;"><img src="bubble.png"></div>
+		<div class="bubble" style="left: 700px; animation-delay: 1.5s; animation-duration: 6s;"><img src="bubble.png"></div>
+		<div class="bubble" style="left: 1500px; animation-delay: 4s; animation-duration: 9s;"><img src="bubble.png"></div>
+		<div class="bubble" style="left: 800px; animation-delay: 3s; animation-duration: 6.5s;"><img src="bubble.png"></div>
+		<div class="bubble" style="left: 1100px; animation-delay: 5s; animation-duration: 8.2s;"><img src="bubble.png"></div>
 	</body>
 </html>
